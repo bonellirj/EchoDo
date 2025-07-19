@@ -16,11 +16,30 @@ const resources = {
   fr: { translation: fr },
 };
 
+// Get saved language from localStorage or use browser language as fallback
+const getInitialLanguage = (): string => {
+  try {
+    const savedPreferences = localStorage.getItem('echodo_preferences');
+    if (savedPreferences) {
+      const preferences = JSON.parse(savedPreferences);
+      if (preferences.language && resources[preferences.language as keyof typeof resources]) {
+        return preferences.language;
+      }
+    }
+  } catch (error) {
+    console.warn('Failed to load saved language preference:', error);
+  }
+  
+  // Fallback to browser language or English
+  const browserLang = navigator.language.split('-')[0];
+  return resources[browserLang as keyof typeof resources] ? browserLang : 'en';
+};
+
 i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: 'en', // default language
+    lng: getInitialLanguage(),
     fallbackLng: 'en',
     interpolation: {
       escapeValue: false, // React already escapes values

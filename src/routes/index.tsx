@@ -4,6 +4,7 @@ import Layout from '../components/Layout';
 
 // Lazy load pages for better performance
 const HomePage = lazy(() => import('../pages/HomePage.tsx'));
+const CalendarPage = lazy(() => import('../pages/CalendarPage.tsx'));
 const SettingsPage = lazy(() => import('../pages/SettingsPage.tsx'));
 
 // Loading component for Suspense fallback
@@ -28,6 +29,14 @@ export const router = createBrowserRouter([
         ),
       },
 
+      {
+        path: 'calendar',
+        element: (
+          <Suspense fallback={<PageLoader />}>
+            <CalendarPage />
+          </Suspense>
+        ),
+      },
       {
         path: 'settings',
         element: (

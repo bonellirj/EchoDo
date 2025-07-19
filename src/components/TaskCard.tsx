@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import type { Task } from '../types';
 import { formatDate, isToday, isTomorrow } from '../lib/utils';
 
@@ -9,16 +10,18 @@ interface TaskCardProps {
 }
 
 const TaskCard: React.FC<TaskCardProps> = ({ task, onToggleComplete, onDelete }) => {
+  const { t } = useTranslation();
+  
   const getDateDisplay = () => {
     if (!task.dueDate) return null;
     
-    if (isToday(task.dueDate)) return 'Today';
-    if (isTomorrow(task.dueDate)) return 'Tomorrow';
+    if (isToday(task.dueDate)) return t('calendar.today');
+    if (isTomorrow(task.dueDate)) return t('calendar.tomorrow');
     return formatDate(task.dueDate);
   };
 
   return (
-    <div className={`card ${task.completed ? 'opacity-75' : ''}`}>
+    <div className={`card dark:bg-gray-800 dark:border-gray-700 ${task.completed ? 'opacity-75' : ''}`}>
       <div className="flex items-start justify-between">
         <div className="flex items-start space-x-3 flex-1">
           <button
@@ -26,7 +29,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onToggleComplete, onDelete })
             className={`mt-1 w-5 h-5 rounded-full border-2 flex-shrink-0 transition-colors ${
               task.completed
                 ? 'bg-green-500 border-green-500'
-                : 'border-gray-300 hover:border-gray-400'
+                : 'border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500'
             }`}
             aria-label={task.completed ? 'Mark as incomplete' : 'Mark as complete'}
           >
@@ -38,15 +41,15 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onToggleComplete, onDelete })
           </button>
           
           <div className="flex-1 min-w-0">
-            <h3 className={`text-lg font-medium ${task.completed ? 'line-through text-gray-500' : 'text-gray-900'}`}>
+            <h3 className={`text-lg font-medium ${task.completed ? 'line-through text-gray-500 dark:text-gray-400' : 'text-gray-900 dark:text-gray-100'}`}>
               {task.title}
             </h3>
             {task.dueDate && (
-              <p className={`text-sm ${task.completed ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className={`text-sm ${task.completed ? 'text-gray-400 dark:text-gray-500' : 'text-gray-600 dark:text-gray-300'}`}>
                 Due: {getDateDisplay()}
               </p>
             )}
-            <p className="text-xs text-gray-400 mt-1">
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
               Created: {formatDate(task.createdAt)}
             </p>
           </div>
@@ -54,7 +57,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onToggleComplete, onDelete })
         
         <button
           onClick={() => onDelete(task.id)}
-          className="text-red-500 hover:text-red-700 p-1"
+          className="text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 p-1"
           aria-label="Delete task"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

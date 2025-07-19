@@ -42,11 +42,45 @@
     "theme": "Tema",
     "notifications": "Notificações",
     "about": "Sobre",
-    "version": "Versão"
+    "version": "Versão",
+    "demoSystem": "Sistema de demonstração para o processo seletivo <strong>Tech to U</strong> inc",
+    "themes": {
+      "light": "Claro",
+      "dark": "Escuro"
+    }
   },
   "calendar": {
     "title": "Calendário",
     "today": "Hoje",
-    "noEvents": "Nenhum evento para esta data"
+    "tomorrow": "Amanhã",
+    "noEvents": "Nenhum evento para esta data",
+    "noTasksForDay": "Nenhuma tarefa para este dia",
+    "pendingTasks": "Tarefas Pendentes",
+    "completedTasks": "Tarefas Concluídas",
+    "pending": "Pendentes",
+    "completed": "Concluídas",
+    "weekDays": {
+      "sun": "Dom",
+      "mon": "Seg",
+      "tue": "Ter",
+      "wed": "Qua",
+      "thu": "Qui",
+      "fri": "Sex",
+      "sat": "Sáb"
+    },
+    "months": {
+      "january": "Janeiro",
+      "february": "Fevereiro",
+      "march": "Março",
+      "april": "Abril",
+      "may": "Maio",
+      "june": "Junho",
+      "july": "Julho",
+      "august": "Agosto",
+      "september": "Setembro",
+      "october": "Outubro",
+      "november": "Novembro",
+      "december": "Dezembro"
+    }
   }
 } 

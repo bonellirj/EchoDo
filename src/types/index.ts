@@ -39,7 +39,7 @@ export interface AppState {
 
 export interface UserPreferences {
   language: 'pt' | 'pt-BR' | 'en' | 'es' | 'fr';
-  theme: 'light' | 'dark' | 'system';
+  theme: 'light' | 'dark';
   notifications: boolean;
 }
 
