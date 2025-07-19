@@ -1,0 +1,53 @@
+Voice Task Creator - Mobile Challenge
+
+What to Build
+A simple mobile web app where users can speak to create tasks.
+
+Example: User says "Remind me to call John December 1st at 3pm" → App creates a task with title, date, and time.
+
+Core Features (Must Have)
+Voice Input: Tap button to record, uses Web Speech API
+
+Task Creation: Convert speech to a task with title and due date
+
+Task Display: Show created tasks in a simple list
+
+Mobile Friendly: Works well on phones
+
+Technical Requirements
+Use Web Speech API: https://mdn.github.io/dom-examples/web-speech-api/speech-color-changer/ or better alternative
+
+Mobile-responsive design
+
+Store tasks locally (localStorage is fine)
+
+Handle basic speech recognition errors
+
+Example Voice Commands
+“Buy groceries on December 15th”
+
+“Finish project by December 18th at 2 pm”
+
+“Call mom tomorrow at 7pm” (Bonus example)
+
+Success Criteria
+☑️ Voice input reliably converts to text
+☑️ Creates tasks with title and basic timing
+☑️ Mobile interface is clean and usable
+☑️ Shows list of created tasks
+
+Bonus Features (If time allows)
+Smart Date Parsing: Convert “tomorrow”, “Friday”, “next week” to actual dates
+
+Task Completion: Add checkboxes to mark tasks as done
+
+Deliverables
+Working web app (can be a single HTML file)
+
+Brief demo showing voice-to-task creation
+
+Source code
+
+Focus:
+Make it work smoothly, not perfectly. We want to see your approach to voice UI and mobile development.
+

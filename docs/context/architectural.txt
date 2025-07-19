@@ -1,0 +1,157 @@
+Technical Requirements — Voice Task Creator (Mobile Web App)
+🧱 Tech Stack
+🚀 Main Stack
+Frontend Framework
+React 19.1.0 – Core framework for building UI
+
+TypeScript 5.8.3 – Type safety for improved developer experience
+
+Build Tool & Dev Server
+Vite 6.3.5 – Ultra-fast dev server and bundler
+
+@vitejs/plugin-react – React support for Vite
+
+Styling
+Tailwind CSS 3.4.1 – Utility-first CSS framework
+
+tailwindcss-animate – Animation utilities
+
+class-variance-authority – Component variants control
+
+clsx – Conditional className utility
+
+tailwind-merge – Intelligent className merging
+
+UI Components & Design System
+Radix UI (Accessible UI Primitives)
+
+@radix-ui/react-accordion
+
+@radix-ui/react-avatar
+
+@radix-ui/react-dialog
+
+@radix-ui/react-dropdown-menu
+
+@radix-ui/react-select
+
+@radix-ui/react-separator
+
+@radix-ui/react-slot
+
+Lucide React – Icon set for clean modern interfaces
+
+React Icons – Additional icon packs
+
+Routing
+React Router DOM 7.6.2 – Client-side routing
+
+Animations
+Framer Motion 12.16.0 – Declarative animations
+
+Carousel
+Embla Carousel React 8.6.0 – Lightweight and performant carousel
+
+Internationalization
+i18next 25.2.1 – Internationalization framework
+
+react-i18next 15.5.2 – React integration
+
+State Management
+Zustand 5.0.5 – Minimalist global state manager
+
+🛠 Development Tools
+Code Quality & Linting
+ESLint 9.25.0 – Linting for JavaScript/TypeScript
+
+eslint-plugin-react-hooks – Rules for Hooks usage
+
+eslint-plugin-react-refresh – React Fast Refresh support
+
+typescript-eslint – TypeScript linting integration
+
+CSS Processing
+PostCSS 8.5.4 – CSS post-processor
+
+Autoprefixer 10.4.21 – Automatic vendor prefixing
+
+📱 Project Capabilities
+PWA-ready (Progressive Web App setup)
+
+Multi-language support (pt, pt-BR, en, es, fr)
+
+Radix UI + Tailwind-based design system
+
+Fully typed via TypeScript
+
+Accessibility-first components
+
+Smooth animations using Framer Motion
+
+Optimized carousel experience with Embla
+
+🗂 Project Structure
+txt
+Copy
+Edit
+/src
+  /components       → Reusable UI components
+  /pages            → Views (home, calendar, settings, etc.)
+  /routes           → Centralized route definitions
+  /services         → Abstraction layers (API/localStorage/etc.)
+  /lib              → Utilities (logging, date parsing, etc.)
+  /i18n             → Language resources and config
+  /hooks            → Custom React hooks
+  /types            → Global TypeScript definitions
+  /config           → Constants and config files
+🧩 All screens and views must be implemented as separate pages.
+🧩 All UI elements should be isolated as components for maximum reusability.
+
+🎯 Strategy & Architectural Decisions
+🔄 Modular Routing
+All routes must be defined in a single file in /routes, using React Router v7.
+
+🧩 UI Design Separation
+Pages must be kept simple and scoped. Avoid monolithic files.
+
+Componentize every visual element (e.g., TaskCard, Header, BottomNavBar).
+
+🧰 Extensible Storage Layer
+Initially, tasks will be stored in localStorage, but all interactions with task data must go through a service abstraction (e.g., taskService.ts) to allow for future migration to an external API.
+
+📡 External API-Ready
+Any external interaction (e.g., AI/NLP parsing, calendar sync) must go through a clearly abstracted layer (service or adapter), enabling effortless swapping of the backend or vendor.
+
+📜 Logging Strategy
+Implement a simple but structured logging mechanism (e.g., lib/logger.ts) with:
+
+ts
+Copy
+Edit
+{
+  timestamp: ISODate,
+  level: 'INFO' | 'ERROR',
+  event: 'TASK_CREATED' | 'VOICE_RECOGNITION_FAILED' | ...,
+  message: string,
+  stackTrace?: string
+}
+Example:
+
+ts
+Copy
+Edit
+log({
+  level: 'ERROR',
+  event: 'TASK_CREATION_FAILED',
+  message: 'Could not parse date from "Friday"',
+  stackTrace: error.stack,
+});
+📌 Notes for IDE Context (e.g., Cursor)
+Project is intended for mobile web with a bottom navigation bar, not desktop layout.
+
+The microphone button is the central action, styled as a floating action button (FAB).
+
+State transitions between views (list/calendar/settings) must feel native/mobile-like.
+
+Speech-to-text parsing (via Web Speech API) should include fallbacks and be isolated in a utility or hook.
+
