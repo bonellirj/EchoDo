@@ -1,0 +1,52 @@
+{
+  "common": {
+    "loading": "Carregando...",
+    "error": "Erro",
+    "success": "Sucesso",
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "close": "Fechar"
+  },
+  "navigation": {
+    "tasks": "Tarefas",
+    "calendar": "Calendário",
+    "settings": "Configurações"
+  },
+  "tasks": {
+    "title": "Tarefas",
+    "create": "Criar Tarefa",
+    "edit": "Editar Tarefa",
+    "delete": "Excluir Tarefa",
+    "completed": "Concluída",
+    "pending": "Pendente",
+    "noTasks": "Nenhuma tarefa ainda",
+    "addFirstTask": "Adicione sua primeira tarefa usando entrada de voz",
+    "dueDate": "Data de Vencimento",
+    "description": "Descrição"
+  },
+  "voice": {
+    "startRecording": "Iniciar Gravação",
+    "stopRecording": "Parar Gravação",
+    "listening": "Ouvindo...",
+    "processing": "Processando...",
+    "notSupported": "Reconhecimento de voz não é suportado neste navegador",
+    "permissionDenied": "Permissão do microfone negada",
+    "error": "Erro no reconhecimento de voz",
+    "tryAgain": "Tentar novamente"
+  },
+  "settings": {
+    "title": "Configurações",
+    "language": "Idioma",
+    "theme": "Tema",
+    "notifications": "Notificações",
+    "about": "Sobre",
+    "version": "Versão"
+  },
+  "calendar": {
+    "title": "Calendário",
+    "today": "Hoje",
+    "noEvents": "Nenhum evento para esta data"
+  }
+} 

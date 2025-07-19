@@ -1,0 +1,52 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close"
+  },
+  "navigation": {
+    "tasks": "Tasks",
+    "calendar": "Calendar",
+    "settings": "Settings"
+  },
+  "tasks": {
+    "title": "Tasks",
+    "create": "Create Task",
+    "edit": "Edit Task",
+    "delete": "Delete Task",
+    "completed": "Completed",
+    "pending": "Pending",
+    "noTasks": "No tasks yet",
+    "addFirstTask": "Add your first task using voice input",
+    "dueDate": "Due Date",
+    "description": "Description"
+  },
+  "voice": {
+    "startRecording": "Start Recording",
+    "stopRecording": "Stop Recording",
+    "listening": "Listening...",
+    "processing": "Processing...",
+    "notSupported": "Voice recognition is not supported in this browser",
+    "permissionDenied": "Microphone permission denied",
+    "error": "Voice recognition error",
+    "tryAgain": "Try again"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "theme": "Theme",
+    "notifications": "Notifications",
+    "about": "About",
+    "version": "Version"
+  },
+  "calendar": {
+    "title": "Calendar",
+    "today": "Today",
+    "noEvents": "No events for this date"
+  }
+} 

@@ -1,0 +1,52 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "close": "Fermer"
+  },
+  "navigation": {
+    "tasks": "Tâches",
+    "calendar": "Calendrier",
+    "settings": "Paramètres"
+  },
+  "tasks": {
+    "title": "Tâches",
+    "create": "Créer une Tâche",
+    "edit": "Modifier la Tâche",
+    "delete": "Supprimer la Tâche",
+    "completed": "Terminée",
+    "pending": "En attente",
+    "noTasks": "Aucune tâche pour le moment",
+    "addFirstTask": "Ajoutez votre première tâche en utilisant la saisie vocale",
+    "dueDate": "Date d'échéance",
+    "description": "Description"
+  },
+  "voice": {
+    "startRecording": "Commencer l'enregistrement",
+    "stopRecording": "Arrêter l'enregistrement",
+    "listening": "Écoute...",
+    "processing": "Traitement...",
+    "notSupported": "La reconnaissance vocale n'est pas prise en charge dans ce navigateur",
+    "permissionDenied": "Permission du microphone refusée",
+    "error": "Erreur de reconnaissance vocale",
+    "tryAgain": "Réessayer"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "language": "Langue",
+    "theme": "Thème",
+    "notifications": "Notifications",
+    "about": "À propos",
+    "version": "Version"
+  },
+  "calendar": {
+    "title": "Calendrier",
+    "today": "Aujourd'hui",
+    "noEvents": "Aucun événement pour cette date"
+  }
+} 
