@@ -24,7 +24,13 @@
     "noTasks": "Aún no hay tareas",
     "addFirstTask": "Agrega tu primera tarea usando entrada de voz",
     "dueDate": "Fecha de Vencimiento",
-    "description": "Descripción"
+    "description": "Descripción",
+    "transcription": {
+      "title": "Transcripción Original",
+      "task": "Tarea",
+      "original": "Entrada de Voz Original",
+      "view": "Ver transcripción original"
+    }
   },
   "voice": {
     "startRecording": "Iniciar Grabación",
@@ -34,7 +40,17 @@
     "notSupported": "El reconocimiento de voz no es compatible con este navegador",
     "permissionDenied": "Permiso de micrófono denegado",
     "error": "Error en el reconocimiento de voz",
-    "tryAgain": "Intentar de nuevo"
+    "tryAgain": "Intentar de nuevo",
+    "recording": "Grabando...",
+    "speakNow": "Habla tu tarea ahora",
+    "clickToStop": "Haz clic en el botón para detener",
+    "stopRecordingButton": "Detener grabación",
+    "startRecordingButton": "Haz clic para iniciar grabación de voz",
+    "processingButton": "Procesando...",
+    "processingError": "Error de Procesamiento",
+    "processingTitle": "Procesando Audio",
+    "processingDescription": "Por favor espera mientras procesamos tu grabación...",
+    "taskCreationError": "La tarea no puede ser creada"
   },
   "settings": {
     "title": "Configuración",
@@ -44,6 +60,8 @@
     "about": "Acerca de",
     "version": "Versión",
     "demoSystem": "Sistema de demostración para el proceso selectivo <strong>Tech to U</strong> inc",
+    "speechToTextLLM": "LLM de Voz a Texto",
+    "textToTaskLLM": "LLM de Texto a Tarea",
     "themes": {
       "light": "Claro",
       "dark": "Oscuro"

@@ -8,6 +8,8 @@ class UserPreferencesService {
       language: 'en',
       theme: 'light',
       notifications: true,
+      speechToTextLLM: 'openai',
+      textToTaskLLM: 'groq',
     };
   }
 
@@ -54,6 +56,20 @@ class UserPreferencesService {
     logger.info('THEME_CHANGED', `Theme changed to: ${theme}`);
   }
 
+  updateSpeechToTextLLM(llm: UserPreferences['speechToTextLLM']): void {
+    const preferences = this.getPreferencesFromStorage();
+    preferences.speechToTextLLM = llm;
+    this.savePreferencesToStorage(preferences);
+    logger.info('SPEECH_TO_TEXT_LLM_CHANGED', `Speech to Text LLM changed to: ${llm}`);
+  }
+
+  updateTextToTaskLLM(llm: UserPreferences['textToTaskLLM']): void {
+    const preferences = this.getPreferencesFromStorage();
+    preferences.textToTaskLLM = llm;
+    this.savePreferencesToStorage(preferences);
+    logger.info('TEXT_TO_TASK_LLM_CHANGED', `Text to Task LLM changed to: ${llm}`);
+  }
+
   updateNotifications(enabled: boolean): void {
     const preferences = this.getPreferencesFromStorage();
     preferences.notifications = enabled;
@@ -67,6 +83,14 @@ class UserPreferencesService {
 
   getTheme(): UserPreferences['theme'] {
     return this.getPreferencesFromStorage().theme;
+  }
+
+  getSpeechToTextLLM(): UserPreferences['speechToTextLLM'] {
+    return this.getPreferencesFromStorage().speechToTextLLM;
+  }
+
+  getTextToTaskLLM(): UserPreferences['textToTaskLLM'] {
+    return this.getPreferencesFromStorage().textToTaskLLM;
   }
 
   getNotifications(): boolean {

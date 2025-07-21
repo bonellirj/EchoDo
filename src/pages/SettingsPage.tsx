@@ -2,9 +2,13 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import LanguageSelector from '../components/LanguageSelector';
 import ThemeSelector from '../components/ThemeSelector';
+import SpeechToTextLLMSelector from '../components/SpeechToTextLLMSelector';
+import TextToTaskLLMSelector from '../components/TextToTaskLLMSelector';
+import { useLLMPreferences } from '../hooks/useLLMPreferences';
 
 const SettingsPage: React.FC = () => {
   const { t } = useTranslation();
+  const { speechToTextLLM, textToTaskLLM, changeSpeechToTextLLM, changeTextToTaskLLM } = useLLMPreferences();
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -14,20 +18,20 @@ const SettingsPage: React.FC = () => {
         </h1>
         
         <div className="space-y-6">
-          {/* Language Settings */}
+          {/* Language, Theme, and LLM Settings */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-            <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
-              {t('settings.language')}
-            </h2>
-            <LanguageSelector />
-          </div>
-
-          {/* Theme Settings */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-            <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
-              {t('settings.theme')}
-            </h2>
-            <ThemeSelector />
+            <div className="space-y-6">
+              <LanguageSelector />
+              <ThemeSelector />
+              <SpeechToTextLLMSelector 
+                value={speechToTextLLM} 
+                onChange={changeSpeechToTextLLM} 
+              />
+              <TextToTaskLLMSelector 
+                value={textToTaskLLM} 
+                onChange={changeTextToTaskLLM} 
+              />
+            </div>
           </div>
 
           {/* About Section */}

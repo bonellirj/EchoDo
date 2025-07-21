@@ -116,7 +116,7 @@ const CalendarPage: React.FC = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState<Date | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
+
   
   const { tasks, toggleTaskCompletion, deleteTask, isLoading, error } = useTasks();
 
@@ -125,7 +125,6 @@ const CalendarPage: React.FC = () => {
 
   const calendarDays = useMemo(() => {
     const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
-    const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0);
     const startDate = new Date(firstDayOfMonth);
     startDate.setDate(startDate.getDate() - firstDayOfMonth.getDay());
 
@@ -192,15 +191,7 @@ const CalendarPage: React.FC = () => {
     await deleteTask(id);
   };
 
-  const handleStartRecording = () => {
-    setIsRecording(true);
-    console.log('Starting voice recording...');
-  };
 
-  const handleStopRecording = () => {
-    setIsRecording(false);
-    console.log('Stopping voice recording...');
-  };
 
   const getTasksForSelectedDay = () => {
     if (!selectedDay) return [];
@@ -357,11 +348,7 @@ const CalendarPage: React.FC = () => {
         onDelete={handleDeleteTask}
       />
       
-      <VoiceButton
-        onStartRecording={handleStartRecording}
-        onStopRecording={handleStopRecording}
-        isRecording={isRecording}
-      />
+      <VoiceButton />
     </div>
   );
 };

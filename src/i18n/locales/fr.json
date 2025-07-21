@@ -24,7 +24,13 @@
     "noTasks": "Aucune tâche pour le moment",
     "addFirstTask": "Ajoutez votre première tâche en utilisant la saisie vocale",
     "dueDate": "Date d'échéance",
-    "description": "Description"
+    "description": "Description",
+    "transcription": {
+      "title": "Transcription Originale",
+      "task": "Tâche",
+      "original": "Entrée Vocale Originale",
+      "view": "Voir la transcription originale"
+    }
   },
   "voice": {
     "startRecording": "Commencer l'enregistrement",
@@ -34,7 +40,17 @@
     "notSupported": "La reconnaissance vocale n'est pas prise en charge dans ce navigateur",
     "permissionDenied": "Permission du microphone refusée",
     "error": "Erreur de reconnaissance vocale",
-    "tryAgain": "Réessayer"
+    "tryAgain": "Réessayer",
+    "recording": "Enregistrement...",
+    "speakNow": "Parlez votre tâche maintenant",
+    "clickToStop": "Cliquez sur le bouton pour arrêter",
+    "stopRecordingButton": "Arrêter l'enregistrement",
+    "startRecordingButton": "Cliquez pour commencer l'enregistrement vocal",
+    "processingButton": "Traitement...",
+    "processingError": "Erreur de Traitement",
+    "processingTitle": "Traitement Audio",
+    "processingDescription": "Veuillez patienter pendant que nous traitons votre enregistrement...",
+    "taskCreationError": "La tâche ne peut pas être créée"
   },
   "settings": {
     "title": "Paramètres",
@@ -44,6 +60,8 @@
     "about": "À propos",
     "version": "Version",
     "demoSystem": "Système de démonstration pour le processus de sélection <strong>Tech to U</strong> inc",
+    "speechToTextLLM": "LLM de Voix vers Texte",
+    "textToTaskLLM": "LLM de Texte vers Tâche",
     "themes": {
       "light": "Clair",
       "dark": "Sombre"

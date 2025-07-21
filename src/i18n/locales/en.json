@@ -24,7 +24,13 @@
     "noTasks": "No tasks yet",
     "addFirstTask": "Add your first task using voice input",
     "dueDate": "Due Date",
-    "description": "Description"
+    "description": "Description",
+    "transcription": {
+      "title": "Original Transcription",
+      "task": "Task",
+      "original": "Original Voice Input",
+      "view": "View original transcription"
+    }
   },
   "voice": {
     "startRecording": "Start Recording",
@@ -34,7 +40,17 @@
     "notSupported": "Voice recognition is not supported in this browser",
     "permissionDenied": "Microphone permission denied",
     "error": "Voice recognition error",
-    "tryAgain": "Try again"
+    "tryAgain": "Try again",
+    "recording": "Recording...",
+    "speakNow": "Speak your task now",
+    "clickToStop": "Click the button to stop",
+    "stopRecordingButton": "Stop recording",
+    "startRecordingButton": "Click to start voice recording",
+    "processingButton": "Processing...",
+    "processingError": "Processing Error",
+    "processingTitle": "Processing Audio",
+    "processingDescription": "Please wait while we process your recording...",
+    "taskCreationError": "Task cannot be created"
   },
   "settings": {
     "title": "Settings",
@@ -44,6 +60,8 @@
     "about": "About",
     "version": "Version",
     "demoSystem": "Demo system for <strong>Tech to U</strong> inc selection process",
+    "speechToTextLLM": "Speech to Text LLM",
+    "textToTaskLLM": "Text to Task LLM",
     "themes": {
       "light": "Light",
       "dark": "Dark"

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import VoiceButton from '../components/VoiceButton';
 import TaskCard from '../components/TaskCard';
@@ -7,18 +7,7 @@ import type { Task } from '../types';
 
 const HomePage: React.FC = () => {
   const { t } = useTranslation();
-  const [isRecording, setIsRecording] = useState(false);
-  const { tasks, toggleTaskCompletion, deleteTask, isLoading, error } = useTasks();
-
-  const handleStartRecording = () => {
-    setIsRecording(true);
-    console.log('Starting voice recording...');
-  };
-
-  const handleStopRecording = () => {
-    setIsRecording(false);
-    console.log('Stopping voice recording...');
-  };
+  const { tasks, toggleTaskCompletion, deleteTask, isLoading, error, refreshTasks } = useTasks();
 
   const handleToggleComplete = async (id: string) => {
     await toggleTaskCompletion(id);
@@ -28,8 +17,32 @@ const HomePage: React.FC = () => {
     await deleteTask(id);
   };
 
-  const pendingTasks = tasks.filter(task => !task.completed);
-  const completedTasks = tasks.filter(task => task.completed);
+  const handleTaskCreated = async (_newTask: Task) => {
+    // Refresh the tasks list to include the new task
+    await refreshTasks();
+  };
+
+  // Sort tasks by due date in ascending order
+  const sortTasksByDueDate = (taskList: Task[]): Task[] => {
+    return taskList.sort((a, b) => {
+      // If both tasks have due dates, compare them
+      if (a.dueDate && b.dueDate) {
+        return a.dueDate.getTime() - b.dueDate.getTime();
+      }
+      // If only one has a due date, prioritize the one with due date
+      if (a.dueDate && !b.dueDate) {
+        return -1;
+      }
+      if (!a.dueDate && b.dueDate) {
+        return 1;
+      }
+      // If neither has a due date, maintain original order
+      return 0;
+    });
+  };
+
+  const pendingTasks = sortTasksByDueDate(tasks.filter(task => !task.completed));
+  const completedTasks = sortTasksByDueDate(tasks.filter(task => task.completed));
 
   if (isLoading) {
     return (
@@ -100,11 +113,7 @@ const HomePage: React.FC = () => {
         )}
       </div>
       
-      <VoiceButton
-        onStartRecording={handleStartRecording}
-        onStopRecording={handleStopRecording}
-        isRecording={isRecording}
-      />
+      <VoiceButton onTaskCreated={handleTaskCreated} />
     </div>
   );
 };

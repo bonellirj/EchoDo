@@ -6,7 +6,7 @@ interface UseTasksReturn {
   tasks: Task[];
   isLoading: boolean;
   error: string | null;
-  createTask: (title: string, dueDate?: Date) => Promise<Task | null>;
+  createTask: (title: string, dueDate?: Date, description?: string, priority?: 'baixa' | 'média' | 'alta', transcription?: string) => Promise<Task | null>;
   updateTask: (id: string, updates: Partial<Omit<Task, 'id' | 'createdAt'>>) => Promise<Task | null>;
   deleteTask: (id: string) => Promise<boolean>;
   toggleTaskCompletion: (id: string) => Promise<Task | null>;
@@ -32,10 +32,10 @@ export const useTasks = (): UseTasksReturn => {
     }
   }, []);
 
-  const createTask = useCallback(async (title: string, dueDate?: Date): Promise<Task | null> => {
+  const createTask = useCallback(async (title: string, dueDate?: Date, description?: string, priority?: 'baixa' | 'média' | 'alta', transcription?: string): Promise<Task | null> => {
     try {
       setError(null);
-      const newTask = await taskService.createTask(title, dueDate);
+      const newTask = await taskService.createTask(title, dueDate, description, priority, transcription);
       setTasks(prev => [...prev, newTask]);
       return newTask;
     } catch (err) {
