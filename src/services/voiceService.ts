@@ -1,3 +1,4 @@
+/// <reference path="../types/speech.d.ts" />
 import type { VoiceRecognitionResult, ParsedTaskData } from '../types';
 import { VOICE_RECOGNITION_CONFIG } from '../config/constants';
 import { log } from '../lib/logger';
@@ -18,10 +19,15 @@ class VoiceService {
   }
 
   private initializeRecognition(): void {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      throw new Error('Speech recognition not supported');
+    }
     this.recognition = new SpeechRecognition();
     
-    Object.assign(this.recognition, VOICE_RECOGNITION_CONFIG);
+    if (this.recognition) {
+      Object.assign(this.recognition, VOICE_RECOGNITION_CONFIG);
+    }
   }
 
   async startRecognition(): Promise<Promise<VoiceRecognitionResult>> {

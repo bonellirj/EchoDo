@@ -17,7 +17,8 @@ class TaskService {
         updatedAt: new Date(task.updatedAt),
       }));
     } catch (error) {
-      log.storageError('getTasksFromStorage', error instanceof Error ? error.message : 'Unknown error');
+      // Log error asynchronously without blocking
+      log.storageError('getTasksFromStorage', error instanceof Error ? error.message : 'Unknown error').catch(console.error);
       return [];
     }
   }
@@ -26,7 +27,7 @@ class TaskService {
     try {
       localStorage.setItem(STORAGE_KEYS.tasks, JSON.stringify(tasks));
     } catch (error) {
-      log.storageError('saveTasksToStorage', error instanceof Error ? error.message : 'Unknown error');
+      log.storageError('saveTasksToStorage', error instanceof Error ? error.message : 'Unknown error').catch(console.error);
       throw new Error('Failed to save tasks to storage');
     }
   }
@@ -44,7 +45,7 @@ class TaskService {
     return tasks.find(task => task.id === id) || null;
   }
 
-  async createTask(title: string, dueDate?: Date, description?: string, priority?: 'baixa' | 'média' | 'alta', transcription?: string): Promise<Task> {
+  async createTask(title: string, dueDate?: Date, description?: string, priority?: 'baixa' | 'média' | 'alta', transcription?: string, transactionId?: string): Promise<Task> {
     const newTask: Task = {
       id: this.generateId(),
       title,
@@ -61,7 +62,7 @@ class TaskService {
     tasks.push(newTask);
     this.saveTasksToStorage(tasks);
 
-    log.taskCreated(newTask.id, newTask.title);
+    log.taskCreated(newTask.id, newTask.title, transactionId).catch(console.error);
     return newTask;
   }
 
@@ -77,7 +78,7 @@ class TaskService {
         meta: { llm_provider: string; model_used: string; } 
       } 
     } 
-  }): Promise<Task> {
+  }, transactionId?: string): Promise<Task> {
     if (!backendTask.task.success) {
       throw new Error('Backend task processing failed');
     }
@@ -97,7 +98,8 @@ class TaskService {
       dueDate,
       backendTask.task.data.description,
       'média', // Default priority since it's not provided by the API
-      backendTask.transcription // Pass transcription directly
+      backendTask.transcription, // Pass transcription directly
+      transactionId
     );
     
     return newTask;
@@ -106,32 +108,39 @@ class TaskService {
   /**
    * Parse API date string and handle timezone conversion
    * The API sends dates in UTC format (e.g., "2025-07-25T00:00:00Z")
-   * We need to preserve the local date without timezone conversion
+   * We need to preserve the local date and time without timezone conversion
    */
   private parseApiDate(dateString: string): Date {
     console.log('TaskService: parseApiDate input', { dateString });
     
     // If the date string ends with 'Z', it's in UTC
     if (dateString.endsWith('Z')) {
-      // Extract the date part (YYYY-MM-DD) and create a local date
-      const datePart = dateString.split('T')[0];
+      // Extract both date and time parts
+      const dateTimePart = dateString.slice(0, -1); // Remove 'Z'
+      const [datePart, timePart] = dateTimePart.split('T');
       const [year, month, day] = datePart.split('-').map(Number);
+      const [hour, minute, second] = timePart ? timePart.split(':').map(Number) : [0, 0, 0];
       
       console.log('TaskService: parseApiDate UTC parsing', {
         datePart,
+        timePart,
         year,
         month,
         day,
+        hour,
+        minute,
+        second,
         monthIndex: month - 1
       });
       
-      // Create a new date in local timezone with the same date
-      const localDate = new Date(year, month - 1, day); // month is 0-indexed
+      // Create a new date in local timezone with the same date and time
+      const localDate = new Date(year, month - 1, day, hour, minute, second); // month is 0-indexed
       
       console.log('TaskService: parseApiDate result', {
         localDate,
         localDateISO: localDate.toISOString(),
-        localDateLocal: localDate.toLocaleDateString()
+        localDateLocal: localDate.toLocaleDateString(),
+        localTimeLocal: localDate.toLocaleTimeString()
       });
       
       return localDate;
@@ -142,7 +151,8 @@ class TaskService {
     console.log('TaskService: parseApiDate normal parsing', {
       normalDate,
       normalDateISO: normalDate.toISOString(),
-      normalDateLocal: normalDate.toLocaleDateString()
+      normalDateLocal: normalDate.toLocaleDateString(),
+      normalTimeLocal: normalDate.toLocaleTimeString()
     });
     
     return normalDate;
@@ -165,7 +175,7 @@ class TaskService {
     tasks[taskIndex] = updatedTask;
     this.saveTasksToStorage(tasks);
 
-    log.taskUpdated(id, updates);
+    log.taskUpdated(id, updates).catch(console.error);
     return updatedTask;
   }
 
@@ -179,7 +189,7 @@ class TaskService {
     }
 
     this.saveTasksToStorage(filteredTasks);
-    log.taskDeleted(id);
+    log.taskDeleted(id).catch(console.error);
     return true;
   }
 

@@ -1,5 +1,6 @@
 import type { LogEntry } from '../types';
 import { LOG_EVENTS } from '../config/constants';
+import loggingService from '../services/loggingService';
 
 class Logger {
   private logs: LogEntry[] = [];
@@ -22,7 +23,7 @@ class Logger {
     };
   }
 
-  private addLog(logEntry: LogEntry): void {
+  private async addLog(logEntry: LogEntry, transactionId?: string): Promise<void> {
     this.logs.push(logEntry);
     
     // Keep only the last maxLogs entries
@@ -37,28 +38,50 @@ class Logger {
       console.error('Failed to store logs in localStorage:', error);
     }
 
-    // Console output for development
-    if (process.env.NODE_ENV === 'development') {
-      const consoleMethod = logEntry.level === 'ERROR' ? 'error' : logEntry.level === 'WARN' ? 'warn' : 'log';
-      console[consoleMethod](`[${logEntry.timestamp}] ${logEntry.level}: ${logEntry.event} - ${logEntry.message}`, logEntry.metadata || '');
+          // Send to external logging service
+      try {
+        const metadata = {
+          ...logEntry.metadata,
+          event: logEntry.event,
+          stackTrace: logEntry.stackTrace,
+          level: logEntry.level.toLowerCase(),
+          app: 'echodo'
+        };
+
+        switch (logEntry.level) {
+          case 'ERROR':
+            await loggingService.error(logEntry.message, undefined, metadata, transactionId);
+            break;
+          case 'WARN':
+            await loggingService.warn(logEntry.message, metadata, transactionId);
+            break;
+          case 'DEBUG':
+            await loggingService.debug(logEntry.message, metadata, transactionId);
+            break;
+          default:
+            await loggingService.info(logEntry.message, metadata, transactionId);
+            break;
+        }
+    } catch (error) {
+      console.error('Failed to send log to external service:', error);
     }
   }
 
-  info(event: string, message: string, metadata?: Record<string, any>): void {
-    this.addLog(this.createLogEntry('INFO', event, message, undefined, metadata));
+  async info(event: string, message: string, metadata?: Record<string, any>, transactionId?: string): Promise<void> {
+    await this.addLog(this.createLogEntry('INFO', event, message, undefined, metadata), transactionId);
   }
 
-  warn(event: string, message: string, metadata?: Record<string, any>): void {
-    this.addLog(this.createLogEntry('WARN', event, message, undefined, metadata));
+  async warn(event: string, message: string, metadata?: Record<string, any>, transactionId?: string): Promise<void> {
+    await this.addLog(this.createLogEntry('WARN', event, message, undefined, metadata), transactionId);
   }
 
-  error(event: string, message: string, error?: Error, metadata?: Record<string, any>): void {
-    this.addLog(this.createLogEntry('ERROR', event, message, error?.stack, metadata));
+  async error(event: string, message: string, error?: Error, metadata?: Record<string, any>, transactionId?: string): Promise<void> {
+    await this.addLog(this.createLogEntry('ERROR', event, message, error?.stack, metadata), transactionId);
   }
 
-  debug(event: string, message: string, metadata?: Record<string, any>): void {
-    if (process.env.NODE_ENV === 'development') {
-      this.addLog(this.createLogEntry('DEBUG', event, message, undefined, metadata));
+  async debug(event: string, message: string, metadata?: Record<string, any>, transactionId?: string): Promise<void> {
+    if (import.meta.env.DEV) {
+      await this.addLog(this.createLogEntry('DEBUG', event, message, undefined, metadata), transactionId);
     }
   }
 
@@ -97,35 +120,35 @@ export default logger;
 
 // Convenience functions for common logging patterns
 export const log = {
-  taskCreated: (taskId: string, title: string) => {
-    logger.info(LOG_EVENTS.TASK_CREATED, `Task created: ${title}`, { taskId, title });
+  taskCreated: async (taskId: string, title: string, transactionId?: string) => {
+    await logger.info(LOG_EVENTS.TASK_CREATED, `Task created: ${title}`, { taskId, title }, transactionId);
   },
   
-  taskUpdated: (taskId: string, changes: Record<string, any>) => {
-    logger.info(LOG_EVENTS.TASK_UPDATED, `Task updated: ${taskId}`, { taskId, changes });
+  taskUpdated: async (taskId: string, changes: Record<string, any>, transactionId?: string) => {
+    await logger.info(LOG_EVENTS.TASK_UPDATED, `Task updated: ${taskId}`, { taskId, changes }, transactionId);
   },
   
-  taskDeleted: (taskId: string) => {
-    logger.info(LOG_EVENTS.TASK_DELETED, `Task deleted: ${taskId}`, { taskId });
+  taskDeleted: async (taskId: string, transactionId?: string) => {
+    await logger.info(LOG_EVENTS.TASK_DELETED, `Task deleted: ${taskId}`, { taskId }, transactionId);
   },
   
-  voiceRecognitionStarted: () => {
-    logger.info(LOG_EVENTS.VOICE_RECOGNITION_STARTED, 'Voice recognition started');
+  voiceRecognitionStarted: async (transactionId?: string) => {
+    await logger.info(LOG_EVENTS.VOICE_RECOGNITION_STARTED, 'Voice recognition started', undefined, transactionId);
   },
   
-  voiceRecognitionSuccess: (text: string, confidence: number) => {
-    logger.info(LOG_EVENTS.VOICE_RECOGNITION_SUCCESS, `Voice recognition successful: ${text}`, { text, confidence });
+  voiceRecognitionSuccess: async (text: string, confidence: number, transactionId?: string) => {
+    await logger.info(LOG_EVENTS.VOICE_RECOGNITION_SUCCESS, `Voice recognition successful: ${text}`, { text, confidence }, transactionId);
   },
   
-  voiceRecognitionFailed: (error: string) => {
-    logger.error(LOG_EVENTS.VOICE_RECOGNITION_FAILED, `Voice recognition failed: ${error}`);
+  voiceRecognitionFailed: async (error: string, transactionId?: string) => {
+    await logger.error(LOG_EVENTS.VOICE_RECOGNITION_FAILED, `Voice recognition failed: ${error}`, undefined, undefined, transactionId);
   },
   
-  dateParsingFailed: (input: string, error: string) => {
-    logger.error(LOG_EVENTS.DATE_PARSING_FAILED, `Date parsing failed for "${input}": ${error}`, undefined, { input });
+  dateParsingFailed: async (input: string, error: string, transactionId?: string) => {
+    await logger.error(LOG_EVENTS.DATE_PARSING_FAILED, `Date parsing failed for "${input}": ${error}`, undefined, { input }, transactionId);
   },
   
-  storageError: (operation: string, error: string) => {
-    logger.error(LOG_EVENTS.STORAGE_ERROR, `Storage error during ${operation}: ${error}`, undefined, { operation });
+  storageError: async (operation: string, error: string, transactionId?: string) => {
+    await logger.error(LOG_EVENTS.STORAGE_ERROR, `Storage error during ${operation}: ${error}`, undefined, { operation }, transactionId);
   },
 }; 

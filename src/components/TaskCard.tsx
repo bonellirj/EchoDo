@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Task } from '../types';
-import { formatDate, isToday, isTomorrow } from '../lib/utils';
+import { formatDate, formatDateTime, isToday, isTomorrow } from '../lib/utils';
 import TranscriptionModal from './TranscriptionModal';
 
 interface TaskCardProps {
@@ -17,9 +17,21 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, onToggleComplete, onDelete })
   const getDateDisplay = () => {
     if (!task.dueDate) return null;
     
-    if (isToday(task.dueDate)) return t('calendar.today');
-    if (isTomorrow(task.dueDate)) return t('calendar.tomorrow');
-    return formatDate(task.dueDate);
+    const formatTime = (date: Date) => {
+      return date.toLocaleTimeString(undefined, {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      });
+    };
+    
+    if (isToday(task.dueDate)) {
+      return `${t('calendar.today')} ${formatTime(task.dueDate)}`;
+    }
+    if (isTomorrow(task.dueDate)) {
+      return `${t('calendar.tomorrow')} ${formatTime(task.dueDate)}`;
+    }
+    return formatDateTime(task.dueDate);
   };
 
   return (

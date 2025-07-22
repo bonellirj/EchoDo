@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import TaskCard from '../components/TaskCard';
 import VoiceButton from '../components/VoiceButton';
 import { useTasks } from '../hooks/useTasks';
@@ -118,7 +118,13 @@ const CalendarPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   
-  const { tasks, toggleTaskCompletion, deleteTask, isLoading, error } = useTasks();
+  const { tasks, toggleTaskCompletion, deleteTask, isLoading, error, refreshTasks } = useTasks();
+
+  // Callback para quando uma nova task é criada
+  const handleTaskCreated = useCallback((_newTask: Task) => {
+    // Atualiza a lista de tasks para refletir a nova task no calendário
+    refreshTasks();
+  }, [refreshTasks]);
 
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth();
@@ -348,7 +354,7 @@ const CalendarPage: React.FC = () => {
         onDelete={handleDeleteTask}
       />
       
-      <VoiceButton />
+      <VoiceButton onTaskCreated={handleTaskCreated} />
     </div>
   );
 };

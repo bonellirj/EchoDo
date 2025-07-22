@@ -4,6 +4,7 @@ import audioRecordingService from '../services/audioRecordingService';
 import backendService from '../services/backendService';
 import taskService from '../services/taskService';
 import { log } from '../lib/logger';
+import loggingService from '../services/loggingService';
 import type { Task } from '../types';
 
 interface UseVoiceRecordingReturn {
@@ -68,14 +69,15 @@ export const useVoiceRecording = (options: UseVoiceRecordingOptions = {}): UseVo
             setProcessing(true);
             // Process audio with backend
             backendService.processAudioToTask(audioBlob)
-              .then(backendResponse => taskService.createTaskFromBackendResponse(backendResponse))
-              .then(newTask => {
+              .then(async backendResponse => {
+                const newTask = await taskService.createTaskFromBackendResponse(backendResponse, backendResponse.timestamp);
                 if (onTaskCreated && newTask) {
                   onTaskCreated(newTask);
                 }
-                log.voiceRecognitionSuccess('Task created from voice input', 1.0);
+                await log.voiceRecognitionSuccess('Task created from voice input', 1.0, backendResponse.timestamp);
+                return newTask;
               })
-              .catch(backendError => {
+              .catch(async backendError => {
                 let errorMessage = 'Failed to process audio';
                 if (backendError instanceof Error) {
                   if (backendError.message.includes('timeout')) {
@@ -90,16 +92,18 @@ export const useVoiceRecording = (options: UseVoiceRecordingOptions = {}): UseVo
                     errorMessage = backendError.message;
                   }
                 }
+                const errorTransactionId = Math.floor(Date.now() / 1000).toString();
                 setError(errorMessage);
-                log.voiceRecognitionFailed(errorMessage);
+                await log.voiceRecognitionFailed(errorMessage, errorTransactionId);
               })
               .finally(() => {
                 setProcessing(false);
               });
-          }).catch(error => {
+          }).catch(async error => {
+            const errorTransactionId = Math.floor(Date.now() / 1000).toString();
             const errorMessage = error instanceof Error ? error.message : 'Failed to stop recording';
             setError(errorMessage);
-            log.voiceRecognitionFailed(errorMessage);
+            await log.voiceRecognitionFailed(errorMessage, errorTransactionId);
             setProcessing(false);
           });
         }
@@ -127,9 +131,10 @@ export const useVoiceRecording = (options: UseVoiceRecordingOptions = {}): UseVo
       await audioRecordingService.startRecording();
       startTimer();
     } catch (error) {
+      const errorTransactionId = Math.floor(Date.now() / 1000).toString();
       const errorMessage = error instanceof Error ? error.message : 'Failed to start recording';
       setError(errorMessage);
-      log.voiceRecognitionFailed(errorMessage);
+      await log.voiceRecognitionFailed(errorMessage, errorTransactionId);
     }
   }, [startStoreRecording, startTimer, setError]);
 
@@ -152,15 +157,18 @@ export const useVoiceRecording = (options: UseVoiceRecordingOptions = {}): UseVo
         const backendResponse = await backendService.processAudioToTask(audioBlob);
         
         // Create task from backend response
-        const newTask = await taskService.createTaskFromBackendResponse(backendResponse);
+        const newTask = await taskService.createTaskFromBackendResponse(backendResponse, backendResponse.timestamp);
         
         // Notify parent component about the new task
         if (onTaskCreated && newTask) {
           onTaskCreated(newTask);
         }
         
-        log.voiceRecognitionSuccess('Task created from voice input', 1.0);
+        await log.voiceRecognitionSuccess('Task created from voice input', 1.0, backendResponse.timestamp);
       } catch (backendError) {
+        // Generate transactionId for error tracking
+        const errorTransactionId = Math.floor(Date.now() / 1000).toString();
+        
         let errorMessage = 'Failed to process audio';
         let detailedError = '';
         
@@ -181,13 +189,14 @@ export const useVoiceRecording = (options: UseVoiceRecordingOptions = {}): UseVo
         }
         
         // Log detailed error for debugging
-        console.error('Voice Recording Error Details:', {
-          error: backendError,
+        await loggingService.error('Voice Recording Error Details', backendError instanceof Error ? backendError : undefined, {
           message: detailedError,
           timestamp: new Date().toISOString(),
           audioBlobSize: audioBlob.size,
-          audioBlobType: audioBlob.type
-        });
+          audioBlobType: audioBlob.type,
+          service: 'voiceRecording',
+          operation: 'stopRecording'
+        }, errorTransactionId);
         
         // For debug purposes, show detailed error in development
         if (import.meta.env.DEV) {
@@ -195,12 +204,13 @@ export const useVoiceRecording = (options: UseVoiceRecordingOptions = {}): UseVo
         }
         
         setError(errorMessage);
-        log.voiceRecognitionFailed(errorMessage);
+        await log.voiceRecognitionFailed(errorMessage, errorTransactionId);
       }
     } catch (error) {
+      const errorTransactionId = Math.floor(Date.now() / 1000).toString();
       const errorMessage = error instanceof Error ? error.message : 'Failed to stop recording';
       setError(errorMessage);
-      log.voiceRecognitionFailed(errorMessage);
+      await log.voiceRecognitionFailed(errorMessage, errorTransactionId);
     } finally {
       setProcessing(false);
     }
